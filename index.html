@@ -10,7 +10,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css?v=303">
+    <link rel="stylesheet" href="style.css?v=505">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
             </div>
             
             <div class="search-wrapper">
-                <input type="text" id="globalSearch" placeholder="Cari buku..." onkeypress="handleHeaderSearch(event)">
+                <input type="text" id="globalSearch" placeholder="Cari judul, penulis..." onkeypress="handleHeaderSearch(event)">
                 <button onclick="executeSearch()"><i class="fas fa-search"></i></button>
             </div>
             
@@ -43,17 +43,17 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content center-content">
-            <h3>Selamat Datang!</h3>
-            <p>Siapa nama kakak?</p>
+            <h3>Selamat Datang! 👋</h3>
+            <p>Boleh tau nama panggilannya?</p>
             <input type="text" id="usernameInput" placeholder="Nama Kamu">
-            <button onclick="saveUser()" class="btn-primary">Masuk</button>
+            <button onclick="saveUser()" class="btn-primary-rounded">Masuk</button>
         </div>
     </div>
 
     <div id="cartModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="toggleCart()">&times;</span>
-            <h3>Buku Disimpan</h3>
+            <h3><i class="fas fa-bookmark"></i> Disimpan</h3>
             <div id="cartItems" class="cart-list"></div>
         </div>
     </div>
@@ -61,21 +61,30 @@
     <div id="productDetailModal" class="modal">
         <div class="modal-content detail-content">
             <span class="close-btn" onclick="closeDetail()">&times;</span>
+            
             <div class="detail-wrapper">
-                <div class="detail-img-wrapper"><img id="detailImg" src=""></div>
+                <div class="detail-img-wrapper">
+                    <img id="detailImg" src="" alt="Buku">
+                </div>
+                
                 <div class="detail-info">
-                    <span class="badge-best">BEST SELLER</span>
-                    <h2 id="detailTitle">Judul</h2>
-                    <p class="author-name">Penulis: <span id="detailAuthor">-</span></p>
-                    <div class="price-tag" id="detailPrice">Rp 0</div>
+                    <span class="detail-badge" id="detailBadge">BEST SELLER</span>
+                    <h2 id="detailTitle">Judul Buku</h2>
+                    <p class="author-info">Penulis: <span id="detailAuthor">-</span></p>
                     
-                    <div class="specs-box">
-                        <div><small>Penerbit</small><br><b id="detailPublisher">-</b></div>
-                        <div><small>Halaman</small><br><b id="detailPages">-</b></div>
+                    <div id="detailPrice" class="detail-price">Rp 0</div>
+                    
+                    <div class="detail-specs">
+                        <div class="spec-item"><span>Penerbit</span><b id="detailPublisher">-</b></div>
+                        <div class="spec-item"><span>Halaman</span><b id="detailPages">-</b></div>
+                        <div class="spec-item"><span>Tahun</span><b id="detailYear">-</b></div>
+                        <div class="spec-item"><span>ISBN</span><b id="detailIsbn">-</b></div>
                     </div>
 
                     <hr>
-                    <p id="detailDesc" class="desc-text">...</p>
+                    <p class="detail-label">Sinopsis:</p>
+                    <p id="detailDesc" class="detail-desc">...</p>
+                    
                     <div class="detail-buttons" id="detailButtons"></div>
                 </div>
             </div>
@@ -83,7 +92,8 @@
     </div>
 
     <div class="chat-widget-wrapper">
-        <button class="chat-toggler" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></button>
+        <span class="chat-tooltip">Tanya Mimin?</span>
+        <button class="chat-toggler" onclick="toggleChat()"><i class="fas fa-robot"></i></button>
     </div>
     
     <div class="chatbot-container" id="chatbot">
@@ -93,12 +103,12 @@
         </div>
         <div class="chat-body" id="chatBody"><div class="bot-msg">Halo! Mau cari buku apa?</div></div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Tanya Mimin..." onkeypress="handleEnter(event)">
+            <input type="text" id="chatInput" placeholder="Ketik pesan..." onkeypress="handleEnter(event)">
             <button onclick="handleUserChat()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <script src="data.js?v=303"></script>
-    <script src="script.js?v=303"></script>
+    <script src="data.js?v=505"></script>
+    <script src="script.js?v=505"></script>
 </body>
 </html>
