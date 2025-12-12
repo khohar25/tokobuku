@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pena dan Buku Pilihan - Toko Buku Terlengkap</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="navbar-container">
+            <div class="logo" onclick="showMainCategories()">
+                <i class="fas fa-book-open"></i> Pena dan Buku Pilihan
+            </div>
+            <div id="userGreeting" class="user-greeting"></div>
+            <div class="search-wrapper">
+                <input type="text" id="globalSearch" placeholder="Cari judul, penulis, atau genre..." onkeypress="handleHeaderSearch(event)">
+                <button onclick="executeSearch()"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-icons" onclick="toggleCart()" title="Buku Disimpan">
+                <div class="cart-wrapper">
+                    <i class="fas fa-bookmark"></i>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb" id="breadcrumb" style="display:none;"></div>
+    <div class="container fade-in" id="contentArea"></div>
+
+    <footer>
+        <p>&copy; 2025 Pena dan Buku Pilihan. Kurasi Buku Terbaik untuk Kamu.</p>
+    </footer>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content center-content">
+            <h2 style="color:var(--primary);">Selamat Datang! 👋</h2>
+            <p style="color:#666;">Boleh tau nama panggilannya?</p>
+            <input type="text" id="usernameInput" placeholder="Nama Kamu">
+            <button onclick="saveUser()" class="btn-primary-rounded">Masuk</button>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleCart()">&times;</span>
+            <h2><i class="fas fa-bookmark"></i> Buku Disimpan</h2>
+            <div id="cartItems" class="cart-list"></div>
+        </div>
+    </div>
+
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content detail-content">
+            <span class="close-btn" onclick="closeDetail()">&times;</span>
+            <div class="detail-wrapper">
+                <div class="detail-img-wrapper">
+                    <img id="detailImg" src="" alt="Buku">
+                </div>
+                <div class="detail-info">
+                    <span class="detail-badge" id="detailBadge">BEST SELLER</span>
+                    <h2 id="detailTitle">Judul Buku</h2>
+                    <p style="color:#666; font-size:0.9rem; margin-bottom:5px;">Penulis: <span id="detailAuthor" style="font-weight:bold;">-</span></p>
+                    
+                    <div id="detailPrice" class="detail-price">Rp 0</div>
+                    <div id="detailRating" class="detail-rating"></div>
+                    
+                    <div class="detail-specs">
+                        <div class="spec-item"><span>Penerbit:</span> <span id="detailPublisher">-</span></div>
+                        <div class="spec-item"><span>Terbit:</span> <span id="detailYear">-</span></div>
+                        <div class="spec-item"><span>Halaman:</span> <span id="detailPages">-</span></div>
+                        <div class="spec-item"><span>ISBN:</span> <span id="detailIsbn">-</span></div>
+                        <div class="spec-item"><span>Bahasa:</span> <span>Indonesia</span></div>
+                    </div>
+
+                    <hr>
+                    <p class="detail-label">Sinopsis:</p>
+                    <p id="detailDesc" class="detail-desc">...</p>
+                    
+                    <div class="detail-buttons" id="detailButtons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-widget-wrapper">
+        <span class="chat-tooltip" id="chatTooltip">Butuh bantuan Pena Mimin? 💬</span>
+        <button class="chat-toggler" onclick="toggleChat()">
+            <i class="fas fa-robot"></i>
+        </button>
+    </div>
+    
+    <div class="chatbot-container" id="chatbot">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-smile-wink"></i> Pena Mimin
+                <span style="font-size:0.75rem; display:block; font-weight:normal; opacity:0.9;">Asisten Baca Kamu</span>
+            </div>
+            <span class="close-chat" onclick="toggleChat()">&times;</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="bot-msg">Halo Kak! 👋<br>Aku Pena Mimin. Bingung mau baca apa? Cerita aja sini!</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Curhat atau cari judul..." onkeypress="handleEnter(event)">
+            <button onclick="handleUserChat()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
