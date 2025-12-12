@@ -1,23 +1,16 @@
 /* =========================================
-   STYLE.CSS (VERSI 2.0 - FIX MOBILE)
+   STYLE.CSS - VERSI FINAL FIX MOBILE
    ========================================= */
 
-/* --- 1. CONFIG & GLOBAL --- */
+/* --- 1. RESET & FONT --- */
 :root {
-    --primary: #0a2e5c; 
-    --secondary: #154c8a; 
-    --accent: #f1c40f;
-    --bg: #f4f7fa; 
-    --white: #ffffff;
-    --shopee: #ee4d2d; 
-    --tokped: #42b549; 
-    --lazada: #10156e; 
-    --danger: #c0392b;     
+    --primary: #0a2e5c; --secondary: #154c8a; --accent: #f1c40f;
+    --bg: #f4f7fa; --white: #ffffff;
+    --shopee: #ee4d2d; --tokped: #42b549; --lazada: #10156e; --danger: #c0392b;     
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body { background: var(--bg); color: #333; padding-bottom: 80px; }
-body.no-scroll { overflow: hidden; height: 100vh; } /* Kunci Layar */
+body.no-scroll { overflow: hidden; height: 100vh; }
 
 /* --- 2. HEADER --- */
 header { background: var(--primary); color: var(--white); padding: 15px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -28,14 +21,15 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .search-wrapper { flex: 1; display: flex; background: var(--white); border-radius: 5px; padding: 2px; }
 .search-wrapper input { flex: 1; border: none; outline: none; padding: 8px 15px; border-radius: 5px; font-size: 0.95rem; }
 .search-wrapper button { background: var(--secondary); color: var(--white); border: none; padding: 0 20px; border-radius: 0 5px 5px 0; cursor: pointer; transition: 0.2s; }
-.search-wrapper button:hover { background: var(--primary); }
 .nav-icons { cursor: pointer; position: relative; font-size: 1.5rem; margin-left: 5px; }
 .cart-badge { position: absolute; top: -5px; right: -10px; background: var(--danger); font-size: 0.7rem; padding: 2px 6px; border-radius: 50%; color: white; border: 2px solid var(--primary); }
 
-/* --- 3. LAYOUT & CARDS --- */
+/* --- 3. LAYOUT --- */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; min-height: 60vh; }
 .breadcrumb { background: white; padding: 15px 20px; margin: 20px auto; max-width: 1200px; border-radius: 8px; font-weight: 600; color: var(--primary); border-bottom: 3px solid var(--accent); }
 .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; margin-bottom: 40px; }
+
+/* --- 4. CARDS --- */
 .cat-card { background: white; padding: 25px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid #eee; }
 .cat-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .cat-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
@@ -46,7 +40,7 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .p-title { font-weight: bold; color: var(--primary); height: 2.8rem; overflow: hidden; margin-bottom: 5px; font-size: 0.95rem; line-height: 1.4rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .p-price { font-weight:bold; font-size:1.1rem; color:var(--shopee); margin-bottom: 5px; }
 
-/* --- 4. BUTTONS & WIDGETS --- */
+/* --- 5. WIDGETS --- */
 .btn-group { display: flex; gap: 5px; margin-top: auto; }
 .btn-save { flex: 0.4; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; }
 .btn-marketplace { flex: 1; display: flex; justify-content: center; align-items: center; border-radius: 4px; text-decoration: none; color: white; font-size: 1.1rem; padding: 8px; border: none; }
@@ -55,26 +49,18 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .countdown-box { background-color: var(--primary); color: white; padding: 2px 5px; border-radius: 4px; min-width: 25px; text-align: center; font-size:0.8rem; }
 .countdown-separator { font-weight: bold; color: var(--shopee); }
 
-/* --- 5. MODALS --- */
-.modal { 
-    display: none; position: fixed; z-index: 9999; left: 0; top: 0; 
-    width: 100%; height: 100%; background: rgba(0,0,0,0.6); 
-    backdrop-filter: blur(2px); align-items: center; justify-content: center; overflow: hidden; 
-}
-.modal-content { 
-    background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; 
-    position: relative; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-}
+/* --- 6. MODALS --- */
+.modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); align-items: center; justify-content: center; overflow: hidden; }
+.modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; position: relative; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 .center-content { text-align: center; }
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; z-index: 10; }
 .btn-primary-rounded { background: var(--primary); color: white; padding: 10px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; }
 .cart-item { display: flex; gap: 10px; padding: 15px 0; border-bottom: 1px solid #eee; align-items: center; }
 
-/* --- 6. DETAIL PRODUK (POP-UP) --- */
+/* --- 7. DETAIL PRODUK (LAPTOP DEFAULT) --- */
 .detail-content { max-width: 850px !important; padding: 0 !important; overflow: hidden; border-radius: 10px; }
 .detail-wrapper { 
-    display: flex; /* Default: Samping-sampingan */
+    display: flex; /* Laptop: Samping-sampingan */
     flex-wrap: wrap; 
     max-height: 85vh; 
     overflow-y: auto; 
@@ -93,7 +79,7 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .detail-buttons { margin-top: auto; display: flex; gap: 10px; }
 .detail-buttons .btn-marketplace { flex: 1; padding: 12px; font-size: 1.1rem; }
 
-/* --- 7. CHATBOT --- */
+/* --- 8. CHATBOT --- */
 .chat-widget-wrapper { position: fixed; bottom: 30px; right: 30px; z-index: 2000; display: flex; align-items: center; gap: 10px; }
 .chat-tooltip { background: white; color: var(--primary); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); animation: bounce 2s infinite; cursor: pointer; white-space: nowrap; position: relative; }
 .chat-tooltip::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); border-width: 6px; border-style: solid; border-color: transparent transparent transparent white; }
@@ -116,28 +102,29 @@ footer { text-align: center; margin-top: 50px; color: #777; font-size: 0.85rem; 
 .fade-in { animation: fadeIn 0.5s ease-out; }
 
 /* ====================================================
-   🔥 KHUSUS HP (RESPONSIVE) - JANGAN DIHAPUS 🔥
+   🔥 CSS KHUSUS HP (RESPONSIVE) - JANGAN DIHAPUS 🔥
    ==================================================== */
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     .navbar-container { flex-wrap: wrap; gap: 10px; }
     .search-wrapper { order: 3; width: 100%; margin-top: 5px; }
     .user-greeting { display: none !important; }
     
-    /* FIX POP-UP DETAIL DI HP */
+    /* FIX POP-UP DETAIL DI HP (CARA PAKSA) */
     .detail-wrapper { 
-        flex-direction: column !important; /* Paksa jadi ATAS-BAWAH */
-        display: flex;
+        display: block !important; /* MATIKAN FLEXBOX */
     }
+    
     .detail-img-wrapper { 
+        width: 100% !important;
+        min-width: 0 !important;
         height: 250px; 
         padding: 10px; 
-        width: 100%; 
-        min-width: auto; 
     }
+    
     .detail-info { 
-        width: 100%; 
-        min-width: auto; 
-        padding: 15px;
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 20px;
     }
     
     /* Chatbot di HP */
