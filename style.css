@@ -1,5 +1,5 @@
 /* =========================================
-   STYLE.CSS - VERSI FIX SCROLL POP-UP
+   STYLE.CSS - FIX TAMPILAN HP (RESPONSIF)
    ========================================= */
 
 /* --- 1. CONFIG & GLOBAL --- */
@@ -12,11 +12,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body { background: var(--bg); color: #333; padding-bottom: 80px; }
 
-/* 🔥 JURUS KUNCI LAYAR (BODY LOCK) 🔥 */
-body.no-scroll {
-    overflow: hidden; /* Ini yang bikin layar utama GAK BISA gerak */
-    height: 100vh;
-}
+/* BODY LOCK (Untuk Pop-up) */
+body.no-scroll { overflow: hidden; height: 100vh; }
 
 /* --- 2. HEADER --- */
 header { background: var(--primary); color: var(--white); padding: 15px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -54,40 +51,17 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .countdown-box { background-color: var(--primary); color: white; padding: 2px 5px; border-radius: 4px; min-width: 25px; text-align: center; font-size:0.8rem; }
 .countdown-separator { font-weight: bold; color: var(--shopee); }
 
-/* --- 5. MODALS (FIX SCROLLING DI SINI) --- */
+/* --- 5. MODALS --- */
 .modal { 
-    display: none; 
-    position: fixed; 
-    z-index: 9999; /* Z-index tertinggi */
-    left: 0; top: 0; 
-    width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.6); 
-    backdrop-filter: blur(2px);
-    
-    /* Flexbox untuk tengahin */
-    align-items: center; 
-    justify-content: center;
-    
-    /* Biar wadahnya sendiri gak bisa discroll, kontennya aja yg scroll */
-    overflow: hidden; 
+    display: none; position: fixed; z-index: 9999; left: 0; top: 0; 
+    width: 100%; height: 100%; background: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(2px); align-items: center; justify-content: center; overflow: hidden; 
 }
-
 .modal-content { 
-    background: white; 
-    padding: 25px; 
-    border-radius: 10px; 
-    width: 90%; 
-    max-width: 400px; 
-    position: relative; 
-    
-    /* SCROLL FIX */
-    max-height: 90vh; /* Maksimal 90% tinggi layar */
-    overflow-y: auto; /* Scroll vertikal aktif kalau konten kepanjangan */
-    -webkit-overflow-scrolling: touch; /* Biar smooth di HP */
-    
+    background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; 
+    position: relative; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
 }
-
 .center-content { text-align: center; }
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; z-index: 10; }
 .btn-primary-rounded { background: var(--primary); color: white; padding: 10px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; }
@@ -96,10 +70,8 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 /* --- 6. DETAIL PRODUK (POP-UP BESAR) --- */
 .detail-content { max-width: 850px !important; padding: 0 !important; overflow: hidden; border-radius: 10px; }
 .detail-wrapper { 
-    display: flex; 
-    flex-wrap: wrap; 
-    max-height: 85vh; /* Batas tinggi wrapper */
-    overflow-y: auto; /* Scroll wrapper kalau di HP */
+    display: flex; flex-wrap: wrap; /* Ini default untuk laptop (Samping-sampingan) */
+    max-height: 85vh; overflow-y: auto; 
 }
 .detail-img-wrapper { flex: 1; background: #f8f9fa; display: flex; align-items: center; justify-content: center; padding: 20px; min-width: 300px; }
 .detail-img-wrapper img { max-width: 100%; max-height: 350px; object-fit: contain; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
@@ -108,7 +80,6 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .detail-price { font-size: 1.8rem; font-weight: bold; color: var(--shopee); margin: 10px 0; }
 .detail-label { font-weight: bold; color: #333; margin-top: 15px; margin-bottom: 5px; }
 .detail-desc { color: #555; line-height: 1.6; font-size: 0.9rem; margin-bottom: 20px; }
-/* Tabel Spek */
 .detail-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 0.85rem; }
 .spec-item { display: flex; flex-direction: column; }
 .spec-item span:first-child { color: #888; font-size: 0.75rem; }
@@ -116,118 +87,54 @@ header { background: var(--primary); color: var(--white); padding: 15px 0; posit
 .detail-buttons { margin-top: auto; display: flex; gap: 10px; }
 .detail-buttons .btn-marketplace { flex: 1; padding: 12px; font-size: 1.1rem; }
 
-/* =========================================
-   UPDATE CSS KHUSUS CHATBOT (ANTI BOCOR)
-   ========================================= */
-
-.chat-widget-wrapper { 
-    position: fixed; bottom: 30px; right: 30px; z-index: 2000; 
-    display: flex; align-items: center; gap: 10px; 
-}
-
-.chat-tooltip { 
-    background: white; color: var(--primary); padding: 8px 15px; border-radius: 20px; 
-    font-size: 0.9rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
-    animation: bounce 2s infinite; cursor: pointer; white-space: nowrap; position: relative; 
-}
-.chat-tooltip::after { 
-    content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); 
-    border-width: 6px; border-style: solid; border-color: transparent transparent transparent white; 
-}
-
-.chat-toggler { 
-    width: 60px; height: 60px; background: var(--primary); color: white; 
-    border: none; border-radius: 50%; font-size: 1.5rem; cursor: pointer; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.3s; 
-    display: flex; align-items: center; justify-content: center; 
-}
+/* --- 7. CHATBOT (ANTI BOCOR) --- */
+.chat-widget-wrapper { position: fixed; bottom: 30px; right: 30px; z-index: 2000; display: flex; align-items: center; gap: 10px; }
+.chat-tooltip { background: white; color: var(--primary); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); animation: bounce 2s infinite; cursor: pointer; white-space: nowrap; position: relative; }
+.chat-tooltip::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); border-width: 6px; border-style: solid; border-color: transparent transparent transparent white; }
+.chat-toggler { width: 60px; height: 60px; background: var(--primary); color: white; border: none; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.3s; display: flex; align-items: center; justify-content: center; }
 .chat-toggler:hover { transform: scale(1.1) rotate(10deg); }
-
-/* --- WADAH UTAMA CHAT (FIX POSISI) --- */
-.chatbot-container { 
-    display: none; 
-    position: fixed; 
-    bottom: 100px; right: 30px; 
-    width: 320px; 
-    height: 450px; 
-    max-height: 70vh; /* Biar gak kepotong di layar pendek */
-    background: white; 
-    border-radius: 15px; 
-    z-index: 2000; 
-    flex-direction: column; 
-    overflow: hidden; /* KUNCI 1: Sembunyikan luapan container utama */
-    box-shadow: 0 5px 25px rgba(0,0,0,0.25); 
-    border: 1px solid #eee; 
-    animation: slideUp 0.3s; 
-}
-
-.chat-header { 
-    background: var(--primary); color: white; padding: 15px; 
-    display: flex; justify-content: space-between; align-items: center;
-    flex-shrink: 0; /* Header gak boleh mengecil */
-}
-
-/* --- BADAN CHAT (AREA SCROLLING) --- */
-.chat-body { 
-    flex: 1; 
-    padding: 15px; 
-    overflow-y: auto; /* Scroll aktif */
-    
-    /* 🔥 JURUS ANTI BOCOR 🔥 */
-    overscroll-behavior: contain; 
-    -ms-scroll-chaining: none;
-    
-    background: #f9f9f9; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 10px; 
-    scroll-behavior: smooth;
-}
-
+.chatbot-container { display: none; position: fixed; bottom: 100px; right: 30px; width: 320px; height: 450px; max-height: 70vh; background: white; border-radius: 15px; z-index: 2000; flex-direction: column; overflow: hidden; box-shadow: 0 5px 25px rgba(0,0,0,0.25); border: 1px solid #eee; animation: slideUp 0.3s; }
+.chat-header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.chat-body { flex: 1; padding: 15px; overflow-y: auto; overscroll-behavior: contain; -ms-scroll-chaining: none; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
 .bot-msg { align-self: flex-start; background: #e3f2fd; padding: 10px; border-radius: 10px 10px 10px 0; font-size: 0.9rem; max-width: 90%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 .user-msg { align-self: flex-end; background: var(--primary); color: white; padding: 10px; border-radius: 10px 10px 0 10px; font-size: 0.9rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-
-.chat-input-area { 
-    display: flex; padding: 10px; border-top: 1px solid #ddd; background: white; 
-    flex-shrink: 0; /* Input gak boleh mengecil */
-}
+.chat-input-area { display: flex; padding: 10px; border-top: 1px solid #ddd; background: white; flex-shrink: 0; }
 .chat-input-area input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 20px; padding-left: 15px; outline: none; }
 .chat-input-area button { margin-left:8px; background:var(--primary); color:white; border:none; width: 35px; height: 35px; border-radius:50%; cursor:pointer; }
-
 .chat-book-card { display:flex; gap:10px; background:white; padding:10px; border-radius:8px; margin-top:5px; border-left:4px solid var(--shopee); box-shadow:0 2px 5px rgba(0,0,0,0.1); align-items: center; cursor: pointer; transition: 0.2s; }
 .chat-book-card:hover { background: #f0f0f0; }
 
-/* Animasi */
-@keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateX(0);} 40% {transform: translateX(-10px);} 60% {transform: translateX(-5px);} }
-@keyframes slideUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
-
-/* Responsif HP: Biar chat gak kegedean */
-@media (max-width: 480px) {
-    .chatbot-container {
-        width: 90%; /* Hampir full layar HP */
-        right: 5%; left: 5%; /* Tengahin */
-        height: 60vh; /* Tinggi menyesuaikan */
-        bottom: 90px;
-    }
-}
 footer { text-align: center; margin-top: 50px; color: #777; font-size: 0.85rem; padding: 20px; border-top: 1px solid #eee; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateX(0);} 40% {transform: translateX(-10px);} 60% {transform: translateX(-5px);} }
 @keyframes slideUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
 .fade-in { animation: fadeIn 0.5s ease-out; }
 
-/* LIVE NOTIF */
-.live-toast { position: fixed; bottom: 30px; left: -300px; background: white; padding: 12px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 15px; z-index: 1999; transition: left 0.5s; border-left: 5px solid var(--tokped); max-width: 300px; }
-.live-toast.show { left: 20px; }
-.toast-img { width: 40px; height: 40px; background: #e8f5e9; color: var(--tokped); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-.toast-content { display: flex; flex-direction: column; font-size: 0.8rem; }
-.toast-name { font-weight: bold; color: #333; }
-.toast-product { font-weight: bold; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
-.toast-time { font-size: 0.7rem; color: #999; margin-top: 2px; }
-
+/* ====================================================
+   🔥 CSS KHUSUS HP (RESPONSIVE) - BAGIAN PENTING 🔥
+   ==================================================== */
 @media (max-width: 768px) {
     .navbar-container { flex-wrap: wrap; gap: 10px; }
     .search-wrapper { order: 3; width: 100%; margin-top: 5px; }
     .user-greeting { display: none !important; }
-    .detail-wrapper { flex-direction: column; }
-    .detail-img-wrapper { height: 300px; padding: 10px; }
+    
+    /* FIX POP-UP DETAIL DI HP */
+    .detail-wrapper { 
+        flex-direction: column !important; /* Paksa jadi atas-bawah */
+    }
+    .detail-img-wrapper { 
+        height: 250px; 
+        padding: 10px; 
+        width: 100%; 
+        min-width: auto; /* Reset min-width biar gak maksa lebar */
+    }
+    .detail-info { 
+        width: 100%; 
+        min-width: auto; 
+        padding: 20px;
+    }
+    
+    /* Chatbot di HP */
+    .chatbot-container {
+        width: 90%; right: 5%; left: 5%; height: 60vh; bottom: 90px;
+    }
 }
