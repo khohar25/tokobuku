@@ -4,6 +4,33 @@
 
 /* --- 1. RESET & FONT --- */
 :root {
+   /* =========================================
+   STYLE.CSS - FIX GESER-GESER
+   ========================================= */
+
+/* --- 1. CONFIG & GLOBAL --- */
+:root {
+    --primary: #0a2e5c; --secondary: #154c8a; --accent: #f1c40f;
+    --bg: #f4f7fa; --white: #ffffff;
+    --shopee: #ee4d2d; --tokped: #42b549; --lazada: #10156e; --danger: #c0392b;     
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+/* 🔥 JURUS ANTI GESER (WAJIB ADA) 🔥 */
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* Memotong apapun yang melebihi lebar layar */
+    position: relative;
+    padding-bottom: 80px; 
+    background: var(--bg); color: #333; 
+}
+
+/* Body Lock saat Pop-up Muncul */
+body.no-scroll { overflow: hidden !important; height: 100vh; }
+
+/* ... (LANJUTKAN DENGAN KODE HEADER, DLL DI BAWAH SINI SEPERTI BIASA) ... */
+/* ... PASTIKAN BAGIAN BAWAHNYA TETAP SAMA ... */
     --primary: #0a2e5c; --secondary: #154c8a; --accent: #f1c40f;
     --bg: #f4f7fa; --white: #ffffff;
     --shopee: #ee4d2d; --tokped: #42b549; --lazada: #10156e; --danger: #c0392b;     
@@ -132,3 +159,4 @@ footer { text-align: center; margin-top: 50px; color: #777; font-size: 0.85rem; 
         width: 90%; right: 5%; left: 5%; height: 60vh; bottom: 90px;
     }
 }
+
