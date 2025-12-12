@@ -8,39 +8,76 @@
     <title>Pena dan Buku Pilihan - Toko Buku Terlengkap</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css?v=99">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css?v=101">
 
     <style>
-        /* 1. Kunci Layar biar gak goyang kanan-kiri */
+        /* 1. Kunci Layar (Anti Geser Kanan-Kiri) */
         html, body {
             max-width: 100%;
             overflow-x: hidden !important;
             position: relative;
         }
 
-        /* 2. PAKSA TAMPILAN HP (MEDIA QUERY) */
+        /* 2. MEDIA QUERY KHUSUS HP (Layar < 768px) */
         @media only screen and (max-width: 768px) {
             
-            /* Paksa Modal jadi Blok (Atas-Bawah), matikan Flexbox */
+            /* --- A. HEADER (Logo Kecil, Ikon Kanan, Search Turun) --- */
+            .navbar-container {
+                display: flex !important;
+                flex-wrap: wrap !important; /* Boleh turun baris */
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 10px 15px !important;
+                gap: 5px !important;
+            }
+
+            /* LOGO: Kecilin Font & Ambil Ruang Kiri */
+            .logo {
+                font-size: 1.1rem !important; /* Pas buat HP */
+                flex: 1 !important; /* Dorong elemen lain ke kanan */
+                white-space: nowrap !important;
+                margin-right: 10px !important;
+            }
+
+            /* IKON SAVE: Pastikan di Kanan Atas */
+            .nav-icons {
+                font-size: 1.3rem !important;
+                margin-left: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+            }
+
+            /* SEARCH BAR: Turun ke Bawah & Full Lebar */
+            .search-wrapper {
+                order: 3 !important; /* Pindah ke urutan 3 */
+                width: 100% !important; /* Lebar Penuh */
+                margin-top: 10px !important; /* Jarak dari logo */
+                box-sizing: border-box !important;
+                display: flex !important;
+            }
+            
+            .search-wrapper input {
+                width: 100% !important;
+                font-size: 0.9rem !important;
+            }
+
+            /* --- B. POP-UP DETAIL (ATAS-BAWAH) --- */
             .detail-wrapper {
                 display: block !important;
                 flex-direction: column !important;
                 height: auto !important;
-                overflow-y: visible !important;
             }
 
-            /* Gambar Full Lebar tapi gak overflow */
             .detail-img-wrapper {
                 width: 100% !important;
-                min-width: 0 !important;
                 height: auto !important;
-                max-height: 250px !important; /* Batasi tinggi gambar di HP */
-                padding: 10px !important;
-                box-sizing: border-box !important;
+                max-height: 280px !important;
                 display: flex !important;
                 justify-content: center !important;
+                padding: 15px !important;
                 background: #f8f9fa !important;
             }
             
@@ -48,39 +85,35 @@
                 width: auto !important;
                 max-width: 100% !important;
                 height: 100% !important;
-                max-height: 230px !important;
+                max-height: 250px !important;
                 object-fit: contain !important;
             }
 
-            /* Teks Full Lebar */
             .detail-info {
                 width: 100% !important;
-                min-width: 0 !important;
-                padding: 15px !important;
+                padding: 20px !important;
                 box-sizing: border-box !important;
             }
 
-            /* Perbaiki Kotak Modal-nya sendiri biar gak nabrak pinggir */
             .modal-content.detail-content {
-                width: 90% !important;
+                width: 92% !important;
                 margin: 20px auto !important;
-                max-height: 80vh !important;
+                max-height: 85vh !important;
                 overflow-y: auto !important;
-                border-radius: 15px !important;
+                border-radius: 12px !important;
             }
             
-            /* Tabel Spesifikasi biar rapi */
+            /* --- C. LAIN-LAIN --- */
             .detail-specs {
                 display: flex !important;
                 flex-direction: column !important;
                 gap: 5px !important;
             }
-
-            /* Tombol Chatbot jangan kegedean */
-            .chat-toggler {
-                width: 50px !important;
-                height: 50px !important;
-                font-size: 1.2rem !important;
+            
+            /* Tombol Chatbot pas di jempol */
+            .chat-widget-wrapper {
+                bottom: 20px !important;
+                right: 20px !important;
             }
         }
     </style>
@@ -92,11 +125,14 @@
             <div class="logo" onclick="showMainCategories()">
                 <i class="fas fa-book-open"></i> Pena dan Buku Pilihan
             </div>
+            
             <div id="userGreeting" class="user-greeting"></div>
+            
             <div class="search-wrapper">
                 <input type="text" id="globalSearch" placeholder="Cari judul..." onkeypress="handleHeaderSearch(event)">
                 <button onclick="executeSearch()"><i class="fas fa-search"></i></button>
             </div>
+            
             <div class="nav-icons" onclick="toggleCart()" title="Buku Disimpan">
                 <div class="cart-wrapper">
                     <i class="fas fa-bookmark"></i>
@@ -188,18 +224,8 @@
         </div>
     </div>
 
-    <div id="live-toast" class="live-toast">
-        <div class="toast-img"><i class="fas fa-shopping-bag"></i></div>
-        <div class="toast-content">
-            <span class="toast-name" id="toastName">User</span>
-            <span class="toast-text">baru saja melihat</span>
-            <span class="toast-product" id="toastProduct">Buku</span>
-            <span class="toast-time">Baru saja</span>
-        </div>
-    </div>
-
-    <script src="data.js?v=99"></script>
-    <script src="script.js?v=99"></script>
+    <script src="data.js?v=101"></script>
+    <script src="script.js?v=101"></script>
 
 </body>
 </html>
