@@ -1,12 +1,11 @@
 // ==========================================
-// FILE: script.js (UPDATE NAMA BOT)
+// FILE: script.js (FINAL - ANTI GESER)
 // ==========================================
 
-// --- CONFIG ---
 const flashSaleSchedule = [0, 6, 9, 12, 15, 18, 21]; 
 let lastSearchResults = []; let lastShownIndex = 0; let chatMode = "normal";
 
-// --- CHATBOT DATABASE (UPDATE NAMA) ---
+// --- CHATBOT DATABASE ---
 const conversationDb = {
     "halo": ["Halo juga Kak! 👋", "Hai! Cari buku apa di sini?", "Halo! Pena Mimin siap bantu."],
     "pagi": ["Pagi kak! Semangat cari ilmunya.", "Selamat pagi! Awali hari dengan baca buku."],
@@ -14,8 +13,7 @@ const conversationDb = {
     "malam": ["Malam kak! Belum tidur?", "Malam! Pena Mimin siap nemenin begadang."],
     "makasih": ["Sama-sama kak! 😊", "Siap! Happy shopping!"],
     "bego": ["Yah, jangan galak-galak dong kak... 😢", "Maaf kak, Pena Mimin masih belajar."],
-    // PERKENALAN DIRI BARU
-    "siapa": ["Kenalin, aku Pena Mimin! Asisten pribadi kakak buat cari buku terbaik. 😎", "Aku Pena Mimin, siap bantu carikan buku idaman kakak."],
+    "siapa": ["Kenalin, aku Pena Mimin! Asisten pribadi kakak.", "Aku Pena Mimin, siap bantu carikan buku idaman kakak."],
     "promo": ["Cek bagian atas kak, selalu ada buku murah!", "Pantengin terus jam Flash Sale-nya ya!"]
 };
 
@@ -38,12 +36,12 @@ function generateRating() {
 
 function generateMarketplaceButtons(links) {
     let html = '';
-    if (links.shopee) html += `<a href="${links.shopee}" target="_blank" class="btn-marketplace btn-shopee"><i class="fas fa-shopping-bag"></i> Beli</a>`;
+    if (links.shopee) html += `<a href="${links.shopee}" target="_blank" class="btn-marketplace btn-shopee" style="position:relative; z-index:10;"><i class="fas fa-shopping-bag"></i> Beli</a>`;
     else if (links.tokopedia) html += `<a href="${links.tokopedia}" target="_blank" class="btn-marketplace btn-tokped"><i class="fas fa-store"></i> Beli</a>`;
     return html;
 }
 
-// --- LOGIKA LOGIN ---
+// --- LOGIKA UTAMA ---
 function checkLogin() {
     const user = localStorage.getItem('username');
     const modal = document.getElementById('loginModal');
@@ -57,12 +55,13 @@ function saveUser() {
     if (name) { localStorage.setItem('username', name); checkLogin(); } else { alert("Isi nama dulu ya kak!"); }
 }
 
-// --- DETAIL PRODUK ---
+// --- DETAIL PRODUK (DENGAN FIX LAYOUT HP VIA JS) ---
 function openProductDetail(bookTitle) {
     const decodedTitle = decodeURIComponent(bookTitle).replace(/\\'/g, "'");
     const book = products.find(p => p.title === decodedTitle);
     if (!book) return;
 
+    // Isi Data ke HTML
     document.getElementById('detailImg').src = book.img;
     document.getElementById('detailTitle').innerText = book.title;
     document.getElementById('detailAuthor').innerText = book.author || "-";
@@ -79,6 +78,35 @@ function openProductDetail(bookTitle) {
 
     const btns = document.getElementById('detailButtons');
     btns.innerHTML = generateMarketplaceButtons(book.links);
+
+    // --- FIX TAMPILAN HP VIA JAVASCRIPT (ANTI CACHE CSS) ---
+    const wrapper = document.querySelector('.detail-wrapper');
+    const imgWrapper = document.querySelector('.detail-img-wrapper');
+    const infoWrapper = document.querySelector('.detail-info');
+    const modalContent = document.querySelector('.detail-content');
+
+    if (window.innerWidth <= 768) {
+        // Kodingan Paksa buat HP
+        wrapper.style.display = "block"; // Jangan Flexbox
+        wrapper.style.flexDirection = "column";
+        
+        imgWrapper.style.width = "100%";
+        imgWrapper.style.height = "auto";
+        imgWrapper.style.padding = "10px";
+        
+        infoWrapper.style.width = "100%";
+        infoWrapper.style.padding = "15px";
+        
+        modalContent.style.width = "95%"; // Jangan 100% biar gak nabrak pinggir
+        modalContent.style.margin = "0 auto";
+    } else {
+        // Balikin ke Laptop
+        wrapper.style.display = "flex";
+        wrapper.style.flexDirection = "row";
+        imgWrapper.style.width = "auto";
+        infoWrapper.style.width = "auto";
+        modalContent.style.width = "90%";
+    }
 
     document.getElementById('productDetailModal').style.display = 'flex';
     document.body.classList.add('no-scroll'); 
@@ -105,11 +133,11 @@ function executeSearch() {
 
 // --- CART ---
 let cart = JSON.parse(localStorage.getItem('myCart')) || [];
-function saveToCart(bookTitle) {
+function saveToCart(indexFromList) {
     const user = localStorage.getItem('username');
     if (!user) { triggerLogin(); return; }
-    const decodedTitle = decodeURIComponent(bookTitle).replace(/\\'/g, "'");
-    const book = products.find(p => p.title === decodedTitle);
+    const bookTitle = indexFromList; 
+    const book = products.find(p => p.title === bookTitle);
     if (book) {
         if(cart.find(i => i.title === book.title)) { alert("Sudah disimpan!"); return; }
         cart.push(book); localStorage.setItem('myCart', JSON.stringify(cart)); updateCartIcon(); alert("Berhasil disimpan!");
@@ -189,9 +217,8 @@ function handleUserChat() {
 function showMainCategories() {
     const highlight = products.filter(p => p.status === 'bestseller' || p.status === 'flashsale');
     let html = '';
-    const now = new Date(); const day = now.getDate(); const month = now.getMonth() + 1; const currentHour = now.getHours();
+    const now = new Date(); const currentHour = now.getHours();
     let dayTitle = "DAILY"; 
-    if (day === month) dayTitle = `${day}.${month} BIG SALE`; else if (day === 25) dayTitle = "PAYDAY SALE";
     const isFlashSaleActive = flashSaleSchedule.includes(currentHour);
 
     if (highlight.length > 0) {
