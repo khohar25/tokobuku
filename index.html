@@ -1,100 +1,219 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pena & Buku Pilihan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Marketplace</title>
 
-    <!-- ICON -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body {
+    margin:0;
+    font-family:system-ui, sans-serif;
+    background:#f8fafc;
+}
 
-    <!-- CSS UTAMA (CSS LAMA KAMU) -->
-    <link rel="stylesheet" href="style.css">
+header {
+    position:sticky;
+    top:0;
+    background:#0f172a;
+    color:#fff;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    z-index:1000;
+}
+
+header input {
+    flex:1;
+    padding:8px 10px;
+    border-radius:8px;
+    border:none;
+}
+
+header .icon {
+    cursor:pointer;
+    position:relative;
+}
+
+#cartCount {
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:red;
+    color:#fff;
+    font-size:11px;
+    padding:2px 6px;
+    border-radius:50%;
+}
+
+#breadcrumb {
+    padding:10px 16px;
+    font-size:.85rem;
+    color:#555;
+}
+
+#contentArea {
+    padding:16px;
+}
+
+.grid-container {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:14px;
+}
+
+.product-card {
+    background:#fff;
+    border-radius:14px;
+    padding:10px;
+    cursor:pointer;
+}
+
+.product-card img {
+    width:100%;
+    height:160px;
+    object-fit:contain;
+}
+
+.product-title {
+    font-size:.85rem;
+    margin:6px 0;
+}
+
+.product-price {
+    font-weight:600;
+    color:#f97316;
+    font-size:.9rem;
+}
+
+.user-msg {
+    text-align:right;
+    margin:6px 0;
+}
+
+.bot-msg {
+    background:#f1f5f9;
+    padding:6px 10px;
+    border-radius:10px;
+    margin:6px 0;
+}
+</style>
 </head>
+
 <body>
 
-<!-- ================= HEADER ================= -->
-<header class="main-header">
-    <div class="logo">
-        <i class="fas fa-book-open"></i> PenaMimin
-    </div>
-
-    <div class="search-box">
-        <input
-            type="text"
-            id="globalSearch"
-            placeholder="Cari judul, penulis..."
-            onkeypress="handleHeaderSearch(event)"
-        >
-        <button onclick="executeSearch()">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-
-    <div class="header-icons">
-        <div class="cart-icon" onclick="toggleCart()">
-            <i class="fas fa-bookmark"></i>
-            <span id="cartCount">0</span>
-        </div>
+<header>
+    <strong>📚 Buku</strong>
+    <input
+        id="globalSearch"
+        placeholder="Cari buku…"
+        onkeydown="handleHeaderSearch(event)"
+    >
+    <div class="icon" onclick="showWishlist()">
+        ⭐
+        <span id="cartCount">0</span>
     </div>
 </header>
 
-<!-- ================= MAIN CONTENT ================= -->
-<main>
-    <!-- breadcrumb -->
-    <div id="breadcrumb"></div>
+<div id="breadcrumb" style="display:none"></div>
+<div id="contentArea"></div>
 
-    <!-- area utama (DI SINI SEMUA RENDER JS) -->
-    <div id="contentArea"></div>
-</main>
+<!-- CHATBOT (PASTE DARI BAGIAN 1) -->
+<!-- CHATBOT FLOATING -->
+<div id="chatbot" style="
+    position:fixed;
+    bottom:90px;
+    right:20px;
+    width:320px;
+    max-height:420px;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    display:none;
+    flex-direction:column;
+    z-index:99999;
+">
 
-<!-- ================= FOOTER ================= -->
-<footer style="text-align:center;padding:20px;color:#777;font-size:.85rem">
-    © 2025 Pena dan Buku Pilihan.
-</footer>
-
-<!-- =================================================
-     CHATBOT FLOATING (AMAN & TERISOLASI)
-     ================================================= -->
-
-<!-- BUTTON FLOAT -->
-<div class="chat-widget-wrapper">
-    <span class="chat-tooltip">Tanya Mimin?</span>
-    <button class="chat-toggler" onclick="toggleChat()">
-        <i class="fas fa-robot"></i>
-    </button>
-</div>
-
-<!-- POPUP CHAT -->
-<div class="chatbot-container" id="chatbot">
-    <div class="chat-header">
-        <strong>Pena Mimin 🤖</strong>
+    <div style="
+        padding:12px 16px;
+        font-weight:600;
+        border-bottom:1px solid #eee;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    ">
+        <span>📚 Chat Buku</span>
         <span style="cursor:pointer" onclick="toggleChat()">✕</span>
     </div>
 
-    <div class="chat-body" id="chatBody">
+    <div id="chatBody" style="
+        flex:1;
+        padding:12px;
+        overflow-y:auto;
+        font-size:.9rem;
+    ">
         <div class="bot-msg">
-            Halo kak 👋<br>
-            Aku Pena Mimin, siap bantu cari buku 📚
+            Halo 👋<br>
+            Aku bisa bantu rekomendasi buku.
         </div>
     </div>
 
-    <div class="chat-input-area">
+    <div style="
+        display:flex;
+        gap:6px;
+        padding:10px;
+        border-top:1px solid #eee;
+    ">
         <input
-            type="text"
             id="chatInput"
-            placeholder="Tanya atau curhat di sini..."
-            onkeypress="if(event.key==='Enter')handleUserChat()"
+            type="text"
+            placeholder="Ketik pesan…"
+            style="
+                flex:1;
+                padding:8px 10px;
+                border-radius:8px;
+                border:1px solid #ddd;
+            "
+            onkeydown="handleUserChat(event)"
         >
-        <button onclick="handleUserChat()">
-            <i class="fas fa-paper-plane"></i>
+        <button
+            onclick="handleUserChat()"
+            style="
+                padding:8px 12px;
+                border:none;
+                border-radius:8px;
+                background:#0f172a;
+                color:#fff;
+                cursor:pointer;
+            "
+        >
+            Kirim
         </button>
     </div>
 </div>
 
-<!-- ================= SCRIPT ================= -->
+<!-- TOMBOL FLOAT CHAT -->
+<button onclick="toggleChat()" style="
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    border:none;
+    background:#0f172a;
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    z-index:99998;
+">
+💬
+</button>
+
+<!-- (tempel HTML chatbot di sini) -->
+
 <script src="data.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
