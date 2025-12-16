@@ -1,24 +1,20 @@
-/* =====================================================
-   INIT
-   ===================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-    updateCartIcon();
-    renderHome();
-});
+/* ================= INIT ================= */
+updateCartIcon();
+showMainCategories();
 
-/* =====================================================
-   HOME RENDER (KATEGORI + PRODUK)
-   ===================================================== */
-function renderHome() {
+/* ================= HOMEPAGE ================= */
+function showMainCategories() {
+    const today = new Date();
+    const dayName = today.toLocaleDateString("id-ID", { weekday: "long" });
+
     let html = `
         <h2 style="margin-bottom:20px;color:var(--primary)">
-            📚 Jelajahi Kategori Buku
+            📚 Rekomendasi Buku
         </h2>
 
         <div class="grid-container" style="margin-bottom:40px">
     `;
 
-    // === KATEGORI ===
     for (let key in categories) {
         html += `
             <div class="cat-card" onclick="showCategory('${key}')">
@@ -30,91 +26,69 @@ function renderHome() {
 
     html += `</div>`;
 
-    // === PRODUK ===
-    html += `
-        <h2 style="margin-bottom:20px;color:var(--primary)">
-            📦 Koleksi Buku
-        </h2>
+    // === PRODUK HIGHLIGHT (LOGIKA ASLI TETAP) ===
+    const highlight = products.filter(
+        p => p.status === 'bestseller' || p.status === 'flashsale'
+    );
 
-        <div class="grid-container">
-    `;
+    if (highlight.length > 0) {
+        html += `
+            <div class="grid-container">
+        `;
 
-    products.forEach(p => {
-        html += productCard(p);
-    });
+        highlight.forEach(b => {
+            html += renderProductCard(b);
+        });
 
-    html += `</div>`;
+        html += `</div>`;
+    }
 
     document.getElementById("breadcrumb").style.display = "none";
     document.getElementById("contentArea").innerHTML = html;
 }
 
-/* =====================================================
-   KATEGORI
-   ===================================================== */
+/* ================= CATEGORY ================= */
 function showCategory(cat) {
     const filtered = products.filter(p => p.main === cat);
 
     document.getElementById("breadcrumb").style.display = "block";
     document.getElementById("breadcrumb").innerHTML =
-        `<span onclick="renderHome()" style="cursor:pointer">Beranda</span> / ${categories[cat].label}`;
+        `<span onclick="showMainCategories()" style="cursor:pointer">Beranda</span> / ${categories[cat].label}`;
 
-    renderProducts(filtered, categories[cat].label);
+    renderGrid(filtered, categories[cat].label);
 }
 
-/* =====================================================
-   RENDER PRODUK
-   ===================================================== */
-function renderProducts(list, title) {
+/* ================= GRID ================= */
+function renderGrid(list, title) {
     if (list.length === 0) {
         document.getElementById("contentArea").innerHTML =
-            `<p style="color:#777">Produk belum tersedia</p>`;
+            `<p>Produk belum tersedia</p>`;
         return;
     }
 
-    let html = `
-        <h2 style="margin-bottom:20px">${title}</h2>
-        <div class="grid-container">
-    `;
+    let html = `<h2>${title}</h2><div class="grid-container">`;
 
-    list.forEach(p => {
-        html += productCard(p);
+    list.forEach(b => {
+        html += renderProductCard(b);
     });
 
     html += `</div>`;
     document.getElementById("contentArea").innerHTML = html;
 }
 
-/* =====================================================
-   PRODUCT CARD TEMPLATE
-   ===================================================== */
-function productCard(p) {
+/* ================= PRODUCT CARD ================= */
+function renderProductCard(b) {
     return `
         <div class="product-card">
-            <img src="${p.img}" alt="${p.title}">
-            <div class="product-title">${p.title}</div>
-            <div class="product-price">
-                Rp ${p.price.toLocaleString("id-ID")}
-            </div>
-            <a href="${p.links.shopee}" target="_blank"
-               style="
-                   text-align:center;
-                   background:var(--shopee);
-                   color:#fff;
-                   padding:8px;
-                   border-radius:8px;
-                   text-decoration:none;
-                   font-size:.85rem;
-               ">
-               Beli di Shopee
-            </a>
+            <img src="${b.img}" alt="${b.title}">
+            <h3>${b.title}</h3>
+            <p>Rp ${b.price.toLocaleString("id-ID")}</p>
+            <a href="${b.links.shopee}" target="_blank">Beli di Shopee</a>
         </div>
     `;
 }
 
-/* =====================================================
-   SEARCH
-   ===================================================== */
+/* ================= SEARCH ================= */
 function handleHeaderSearch(e) {
     if (e.key === "Enter") executeSearch();
 }
@@ -122,29 +96,23 @@ function handleHeaderSearch(e) {
 function executeSearch() {
     const q = document.getElementById("globalSearch").value.toLowerCase();
     const result = products.filter(p =>
-        p.title.toLowerCase().includes(q) ||
-        (p.keywords && p.keywords.some(k => q.includes(k)))
+        p.title.toLowerCase().includes(q)
     );
-    renderProducts(result, `Hasil pencarian: "${q}"`);
+    renderGrid(result, "Hasil Pencarian");
 }
 
-/* =====================================================
-   CART (SIMPLE)
-   ===================================================== */
+/* ================= CART ================= */
 let cart = [];
 
 function updateCartIcon() {
-    const el = document.getElementById("cartCount");
-    if (el) el.innerText = cart.length;
+    document.getElementById("cartCount").innerText = cart.length;
 }
 
 function toggleCart() {
-    alert("Fitur simpan akan diaktifkan");
+    alert("Fitur simpan belum diaktifkan");
 }
 
-/* =====================================================
-   CHATBOT
-   ===================================================== */
+/* ================= CHATBOT ================= */
 function toggleChat() {
     const c = document.getElementById("chatbot");
     c.style.display = c.style.display === "flex" ? "none" : "flex";
@@ -162,7 +130,7 @@ function handleUserChat() {
     body.innerHTML += `
         <div class="bot-msg">
             Siap kak 👍<br>
-            Rekomendasi buku segera aktif.
+            Fitur rekomendasi akan segera aktif.
         </div>
     `;
     body.scrollTop = body.scrollHeight;
