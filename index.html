@@ -1,227 +1,100 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pena & Buku Pilihan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pena & Buku Pilihan</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
-/* ================= GLOBAL ================= */
-:root{
-    --primary:#0a2e5c;
-    --shopee:#ee4d2d;
-}
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-body{margin:0;background:#f4f7fa;padding-bottom:120px}
-
-/* ================= HEADER ================= */
-header{
-    position:sticky;top:0;z-index:100;
-    background:var(--primary);color:#fff;
-    padding:12px 16px;
-    display:flex;gap:12px;align-items:center
-}
-header h1{font-size:1.1rem;margin:0}
-header input{
-    flex:1;padding:8px 12px;border-radius:6px;border:none
-}
-
-/* ================= CONTENT ================= */
-.container{padding:16px}
-.folder-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:16px
-}
-.folder-card{
-    background:linear-gradient(135deg,#0a2e5c,#154c8a);
-    color:#fff;border-radius:16px;
-    padding:20px;cursor:pointer;
-    box-shadow:0 10px 25px rgba(0,0,0,.25)
-}
-.folder-title{font-weight:bold;font-size:1.1rem}
-.folder-desc{font-size:.85rem;opacity:.9;margin-top:6px}
-
-/* ================= CHAT FLOATING ================= */
-.chat-widget-wrapper{
-    position:fixed;bottom:25px;right:25px;
-    z-index:9999;display:flex;gap:10px;align-items:center
-}
-.chat-tooltip{
-    background:#fff;color:var(--primary);
-    padding:8px 14px;border-radius:20px;
-    font-size:.85rem;font-weight:bold;
-    box-shadow:0 5px 15px rgba(0,0,0,.25);
-    animation:bounce 2s infinite
-}
-.chat-toggler{
-    width:58px;height:58px;border-radius:50%;
-    border:none;background:var(--primary);
-    color:#fff;font-size:1.4rem;
-    box-shadow:0 10px 25px rgba(0,0,0,.35);
-    cursor:pointer
-}
-
-/* ================= CHAT POPUP ================= */
-.chatbot-container{
-    position:fixed;bottom:95px;right:25px;
-    width:330px;height:460px;background:#fff;
-    border-radius:18px;display:none;
-    flex-direction:column;overflow:hidden;
-    box-shadow:0 15px 40px rgba(0,0,0,.4);
-    z-index:9999
-}
-.chat-header{
-    background:var(--primary);color:#fff;
-    padding:14px;display:flex;
-    justify-content:space-between;align-items:center
-}
-.chat-body{
-    flex:1;padding:14px;
-    background:#f7f7f7;overflow-y:auto;
-    display:flex;flex-direction:column;gap:10px
-}
-.bot-msg{
-    background:#e3f2fd;padding:10px;
-    border-radius:12px 12px 12px 0;
-    max-width:85%;font-size:.85rem
-}
-.user-msg{
-    align-self:flex-end;background:var(--primary);
-    color:#fff;padding:10px;
-    border-radius:12px 12px 0 12px;
-    max-width:85%;font-size:.85rem
-}
-.chat-input-area{
-    display:flex;padding:10px;border-top:1px solid #ddd
-}
-.chat-input-area input{
-    flex:1;padding:8px 12px;
-    border-radius:20px;border:1px solid #ccc
-}
-.chat-input-area button{
-    margin-left:8px;width:36px;height:36px;
-    border-radius:50%;border:none;
-    background:var(--primary);color:#fff;
-    cursor:pointer
-}
-.chat-book-card{
-    display:flex;gap:10px;
-    background:#fff;padding:8px;
-    border-radius:10px;
-    border-left:4px solid var(--shopee);
-    cursor:pointer;align-items:center
-}
-
-/* ================= MOBILE ================= */
-@media(max-width:576px){
-    .chatbot-container{
-        width:92%;left:4%;right:4%;
-        height:60vh
-    }
-}
-
-@keyframes bounce{
-    0%,100%{transform:translateX(0)}
-    50%{transform:translateX(-6px)}
-}
-</style>
+    <!-- CSS UTAMA (CSS LAMA KAMU) -->
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-    <h1>📚 Pena & Buku</h1>
-    <input placeholder="Cari buku (dummy)">
-</header>
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+    <div class="logo">
+        <i class="fas fa-book-open"></i> PenaMimin
+    </div>
 
-<div class="container">
-    <h2>📂 Kategori Buku</h2>
-    <div class="folder-grid">
-        <div class="folder-card">
-            <div class="folder-title">📁 Fiksi</div>
-            <div class="folder-desc">Novel, romansa, fantasi</div>
-        </div>
-        <div class="folder-card">
-            <div class="folder-title">📁 Non-Fiksi</div>
-            <div class="folder-desc">Motivasi, psikologi</div>
-        </div>
-        <div class="folder-card">
-            <div class="folder-title">📁 Referensi</div>
-            <div class="folder-desc">Pendidikan & panduan</div>
+    <div class="search-box">
+        <input
+            type="text"
+            id="globalSearch"
+            placeholder="Cari judul, penulis..."
+            onkeypress="handleHeaderSearch(event)"
+        >
+        <button onclick="executeSearch()">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+    <div class="header-icons">
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-bookmark"></i>
+            <span id="cartCount">0</span>
         </div>
     </div>
-</div>
+</header>
 
-<!-- ================= CHAT FLOAT BUTTON ================= -->
+<!-- ================= MAIN CONTENT ================= -->
+<main>
+    <!-- breadcrumb -->
+    <div id="breadcrumb"></div>
+
+    <!-- area utama (DI SINI SEMUA RENDER JS) -->
+    <div id="contentArea"></div>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer style="text-align:center;padding:20px;color:#777;font-size:.85rem">
+    © 2025 Pena dan Buku Pilihan.
+</footer>
+
+<!-- =================================================
+     CHATBOT FLOATING (AMAN & TERISOLASI)
+     ================================================= -->
+
+<!-- BUTTON FLOAT -->
 <div class="chat-widget-wrapper">
-    <span class="chat-tooltip" id="chatTooltip">Butuh bantuan? 💬</span>
+    <span class="chat-tooltip">Tanya Mimin?</span>
     <button class="chat-toggler" onclick="toggleChat()">
         <i class="fas fa-robot"></i>
     </button>
 </div>
 
-<!-- ================= CHAT POPUP ================= -->
+<!-- POPUP CHAT -->
 <div class="chatbot-container" id="chatbot">
     <div class="chat-header">
-        <div>
-            <strong>Pena Mimin 🤖</strong><br>
-            <small>Asisten Buku</small>
-        </div>
-        <span onclick="toggleChat()" style="cursor:pointer">✕</span>
+        <strong>Pena Mimin 🤖</strong>
+        <span style="cursor:pointer" onclick="toggleChat()">✕</span>
     </div>
 
     <div class="chat-body" id="chatBody">
         <div class="bot-msg">
             Halo kak 👋<br>
-            Aku Pena Mimin. Mau cari buku apa?
+            Aku Pena Mimin, siap bantu cari buku 📚
         </div>
     </div>
 
     <div class="chat-input-area">
-        <input id="chatInput" placeholder="Ketik di sini..."
-               onkeypress="if(event.key==='Enter')handleUserChat()">
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Tanya atau curhat di sini..."
+            onkeypress="if(event.key==='Enter')handleUserChat()"
+        >
         <button onclick="handleUserChat()">
             <i class="fas fa-paper-plane"></i>
         </button>
     </div>
 </div>
 
-<script>
-/* ================= CHAT SCRIPT ================= */
-function toggleChat(){
-    const chat=document.getElementById("chatbot");
-    const tip=document.getElementById("chatTooltip");
-    if(chat.style.display==="flex"){
-        chat.style.display="none";
-        tip.style.display="block";
-    }else{
-        chat.style.display="flex";
-        tip.style.display="none";
-    }
-}
-
-function handleUserChat(){
-    const input=document.getElementById("chatInput");
-    const text=input.value.trim();
-    if(!text)return;
-
-    const body=document.getElementById("chatBody");
-    body.innerHTML+=`<div class="user-msg">${text}</div>`;
-    input.value="";
-
-    setTimeout(()=>{
-        body.innerHTML+=`
-        <div class="bot-msg">
-            Oke kak 👍<br>
-            Fitur rekomendasi buku akan segera aktif.
-        </div>`;
-        body.scrollTop=body.scrollHeight;
-    },600);
-}
-</script>
+<!-- ================= SCRIPT ================= -->
+<script src="data.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
