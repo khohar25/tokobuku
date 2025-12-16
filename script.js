@@ -1,110 +1,94 @@
-/* =====================================================
-   SCRIPT.JS – FULL VERSION (FLOATING CHATBOT)
-   ===================================================== */
+/* ================= INIT ================= */
+updateCartIcon();
+showMainCategories();
 
-/* ======================
-   DUMMY DATA PRODUK
-   ====================== */
-/* kalau kamu sudah punya data.js, HAPUS BAGIAN INI */
-const products = [
-    {
-        title: "Nanti Juga Sembuh Sendiri",
-        price: 79000,
-        img: "https://down-bs-id.img.susercontent.com/ffb4ca321a33d8a02d21e8351b453b28.webp",
-        links: { shopee: "https://s.shopee.co.id/AKTTRbJ8Fr" },
-        keywords: ["galau","sedih","healing","self love"]
-    },
-    {
-        title: "Be Calm, Be Happy",
-        price: 64000,
-        img: "https://down-bs-id.img.susercontent.com/id-11134207-8224w-mi144ymso5xd95.webp",
-        links: { shopee: "https://s.shopee.co.id/Lg7lxeNp5" },
-        keywords: ["tenang","bahagia","stress"]
+/* ================= HOMEPAGE ================= */
+function showMainCategories(){
+    let html = `
+        <h2 style="margin-bottom:20px;color:var(--primary)">
+            📚 Jelajahi Kategori Buku
+        </h2>
+        <div class="grid-container">
+    `;
+
+    for(let key in categories){
+        html += `
+            <div class="cat-card" onclick="showCategory('${key}')">
+                <i class="fas ${categories[key].icon}"></i>
+                <h3>${categories[key].label}</h3>
+            </div>
+        `;
     }
-];
 
-/* ======================
-   CHATBOT TOGGLE
-   ====================== */
+    html += `</div>`;
+    document.getElementById("breadcrumb").style.display="none";
+    document.getElementById("contentArea").innerHTML = html;
+}
+
+function showCategory(cat){
+    const filtered = products.filter(p=>p.main===cat);
+    renderGrid(filtered, categories[cat].label);
+}
+
+/* ================= GRID ================= */
+function renderGrid(list,title){
+    if(list.length===0){
+        document.getElementById("contentArea").innerHTML =
+        `<p>Produk belum tersedia</p>`;
+        return;
+    }
+
+    let html=`<h2>${title}</h2><div class="grid-container">`;
+    list.forEach(b=>{
+        html+=`
+            <div class="cat-card">
+                <h3>${b.title}</h3>
+                <p>Rp ${b.price.toLocaleString("id-ID")}</p>
+            </div>
+        `;
+    });
+    html+=`</div>`;
+    document.getElementById("contentArea").innerHTML=html;
+}
+
+/* ================= SEARCH ================= */
+function handleHeaderSearch(e){
+    if(e.key==="Enter") executeSearch();
+}
+function executeSearch(){
+    const q=document.getElementById("globalSearch").value.toLowerCase();
+    const res=products.filter(p=>p.title.toLowerCase().includes(q));
+    renderGrid(res,"Hasil Pencarian");
+}
+
+/* ================= CART (SIMPLE) ================= */
+let cart=[];
+function updateCartIcon(){
+    document.getElementById("cartCount").innerText=cart.length;
+}
+function toggleCart(){
+    alert("Fitur disimpan belum diaktifkan");
+}
+
+/* ================= CHATBOT ================= */
 function toggleChat(){
-    const chat = document.getElementById("chatbot");
-    const tip  = document.getElementById("chatTooltip");
-
-    if(chat.style.display === "flex"){
-        chat.style.display = "none";
-        if(tip) tip.style.display = "block";
-    } else {
-        chat.style.display = "flex";
-        if(tip) tip.style.display = "none";
-    }
+    const c=document.getElementById("chatbot");
+    c.style.display=c.style.display==="flex"?"none":"flex";
 }
-
-/* ======================
-   CHAT INPUT
-   ====================== */
-function handleEnter(e){
-    if(e.key === "Enter") handleUserChat();
-}
-
 function handleUserChat(){
-    const input = document.getElementById("chatInput");
-    const text = input.value.trim().toLowerCase();
+    const input=document.getElementById("chatInput");
+    const text=input.value.trim();
     if(!text) return;
 
-    const body = document.getElementById("chatBody");
+    const body=document.getElementById("chatBody");
+    body.innerHTML+=`<div class="user-msg">${text}</div>`;
+    input.value="";
 
-    /* pesan user */
-    body.innerHTML += `<div class="user-msg">${input.value}</div>`;
-    input.value = "";
-
-    /* cari produk berdasarkan keyword */
-    const found = products.filter(p =>
-        p.keywords && p.keywords.some(k => text.includes(k))
-    );
-
-    /* respon bot */
-    if(found.length === 0){
-        body.innerHTML += `
+    body.innerHTML+=`
         <div class="bot-msg">
-            Maaf kak 😅 aku belum nemu buku yang cocok.<br>
-            Coba pakai kata: <b>galau, sedih, healing, motivasi</b>
-        </div>`;
-    } else {
-        body.innerHTML += `
-        <div class="bot-msg">
-            Aku nemu beberapa buku yang cocok 👇
-        </div>`;
-
-        found.slice(0,3).forEach(b=>{
-            body.innerHTML += `
-            <div class="chat-book-card" onclick="openLink('${b.links.shopee}')">
-                <img src="${b.img}">
-                <div>
-                    <b>${b.title}</b><br>
-                    <span style="color:#ee4d2d;font-size:.75rem">
-                        Rp ${b.price.toLocaleString("id-ID")}
-                    </span>
-                </div>
-            </div>`;
-        });
-    }
-
-    body.scrollTop = body.scrollHeight;
+            Siap kak 👍<br>
+            Fitur rekomendasi akan segera aktif.
+        </div>
+    `;
+    body.scrollTop=body.scrollHeight;
 }
-
-/* ======================
-   OPEN LINK
-   ====================== */
-function openLink(url){
-    window.open(url, "_blank");
-}
-
-/* ======================
-   AUTO INIT (OPTIONAL)
-   ====================== */
-window.addEventListener("load", () => {
-    const body = document.getElementById("chatBody");
-    if(body){
-        body.scrollTop = body.scrollHeight;
-    }
-});
