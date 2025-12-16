@@ -1,37 +1,32 @@
 /* =====================================================
    INIT
-   ===================================================== */
+===================================================== */
 updateCartIcon();
 showMainCategories();
+injectQuickReplies();
+
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
 
 /* =====================================================
    HOME – SEMUA PRODUK
-   ===================================================== */
+===================================================== */
 function showMainCategories() {
-    let html = `
-        <h2 style="margin-bottom:20px;color:var(--primary)">
-            📚 Semua Buku
-        </h2>
-        <div class="grid-container">
-    `;
-
-    products.forEach(p => {
-        html += renderProductCard(p);
-    });
-
+    let html = `<h2>📚 Semua Buku</h2><div class="grid-container">`;
+    products.forEach(p => html += renderProductCard(p));
     html += `</div>`;
-
     document.getElementById("breadcrumb").style.display = "none";
     document.getElementById("contentArea").innerHTML = html;
 }
 
 /* =====================================================
    PRODUCT CARD
-   ===================================================== */
+===================================================== */
 function renderProductCard(p) {
     return `
         <div class="product-card" onclick="openProductPopup(${p.id})">
-            <img src="${p.img}" alt="${p.title}">
+            <img src="${p.img}">
             <div class="product-title">${p.title}</div>
             <div class="product-price">
                 Rp ${p.price.toLocaleString("id-ID")}
@@ -41,20 +36,32 @@ function renderProductCard(p) {
 }
 
 /* =====================================================
-   POP-UP DETAIL (MOBILE FULLSCREEN)
-   ===================================================== */
+   TRACK USER INTEREST
+===================================================== */
+function trackInterest(p) {
+    let interest = JSON.parse(localStorage.getItem("userInterest")) || {};
+    (p.keywords || []).forEach(k => {
+        interest[k] = (interest[k] || 0) + 1;
+    });
+    localStorage.setItem("userInterest", JSON.stringify(interest));
+}
+
+/* =====================================================
+   PRODUCT POPUP (MOBILE FULLSCREEN)
+===================================================== */
 function openProductPopup(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
 
+    trackInterest(p);
     closeProductPopup();
+
     const isMobile = window.innerWidth <= 768;
 
     const modal = document.createElement("div");
     modal.id = "productModal";
     modal.style = `
-        position:fixed;
-        inset:0;
+        position:fixed;inset:0;
         background:rgba(0,0,0,.6);
         z-index:99999;
         display:flex;
@@ -68,47 +75,32 @@ function openProductPopup(id) {
             width:100%;
             max-width:${isMobile ? "100%" : "420px"};
             height:${isMobile ? "100%" : "auto"};
-            border-radius:${isMobile ? "0" : "16px"};
             padding:20px;
             overflow-y:auto;
-            position:relative;
         ">
-            <div style="position:sticky;top:0;background:#fff;padding-bottom:10px">
-                <span onclick="closeProductPopup()" style="cursor:pointer">← Kembali</span>
-            </div>
+            <span onclick="closeProductPopup()">← Kembali</span>
 
             <img src="${p.img}" style="width:100%;height:260px;object-fit:contain;margin:16px 0">
 
             <h2>${p.title}</h2>
-            <p style="font-size:.9rem;color:#555">${p.description}</p>
+            <p>${p.description}</p>
 
-            <div style="font-size:.9rem;line-height:1.7;margin:14px 0">
+            <div>
                 <div><b>Penulis:</b> ${p.author}</div>
                 <div><b>Penerbit:</b> ${p.publisher}</div>
-                <div><b>Jumlah Halaman:</b> ${p.pages}</div>
+                <div><b>Halaman:</b> ${p.pages}</div>
             </div>
 
-            <div style="font-weight:bold;color:var(--shopee);font-size:1.1rem">
+            <div style="font-weight:bold;margin:12px 0">
                 Rp ${p.price.toLocaleString("id-ID")}
             </div>
 
-            <div style="
-                position:${isMobile ? "fixed" : "static"};
-                bottom:0;left:0;width:100%;
-                background:#fff;padding:16px;
-                display:flex;gap:12px
-            ">
+            <div style="display:flex;gap:10px">
                 <a href="${p.links.shopee}" target="_blank"
-                   style="flex:1;text-align:center;background:var(--shopee);
-                          color:#fff;padding:14px;border-radius:12px;text-decoration:none">
+                   style="flex:1;background:#f97316;color:#fff;padding:12px;text-align:center">
                    Beli Sekarang
                 </a>
-
-                <button onclick="saveProduct(${p.id})"
-                        style="width:52px;border:none;border-radius:12px;
-                               background:#f1f5f9;font-size:20px">
-                    ⭐
-                </button>
+                <button onclick="saveProduct(${p.id})">⭐</button>
             </div>
         </div>
     `;
@@ -122,27 +114,16 @@ function closeProductPopup() {
 }
 
 /* =====================================================
-   SAVE & WISHLIST
-   ===================================================== */
+   SAVE / WISHLIST
+===================================================== */
 function saveProduct(id) {
     let saved = JSON.parse(localStorage.getItem("savedProducts")) || [];
-
     if (!saved.includes(id)) {
         saved.push(id);
         localStorage.setItem("savedProducts", JSON.stringify(saved));
         updateCartIcon();
         alert("Produk disimpan ⭐");
-    } else {
-        alert("Produk sudah ada di Wishlist");
     }
-}
-
-function removeSavedProduct(id) {
-    let saved = JSON.parse(localStorage.getItem("savedProducts")) || [];
-    saved = saved.filter(x => x !== id);
-    localStorage.setItem("savedProducts", JSON.stringify(saved));
-    updateCartIcon();
-    showWishlist();
 }
 
 function updateCartIcon() {
@@ -152,95 +133,151 @@ function updateCartIcon() {
 }
 
 /* =====================================================
-   HALAMAN WISHLIST
-   ===================================================== */
+   WISHLIST PAGE
+===================================================== */
 function showWishlist() {
     const savedIds = JSON.parse(localStorage.getItem("savedProducts")) || [];
     const list = products.filter(p => savedIds.includes(p.id));
 
-    document.getElementById("breadcrumb").style.display = "block";
-    document.getElementById("breadcrumb").innerHTML =
-        `<span onclick="showMainCategories()" style="cursor:pointer">Beranda</span> / Wishlist`;
-
-    if (list.length === 0) {
-        document.getElementById("contentArea").innerHTML =
-            `<p style="color:#777">Wishlist masih kosong</p>`;
+    if (!list.length) {
+        document.getElementById("contentArea").innerHTML = "<p>Wishlist kosong</p>";
         return;
     }
 
     let html = `<h2>⭐ Wishlist</h2><div class="grid-container">`;
-
-    list.forEach(p => {
-        html += `
-            <div class="product-card">
-                <img src="${p.img}" onclick="openProductPopup(${p.id})">
-                <div class="product-title">${p.title}</div>
-                <div class="product-price">
-                    Rp ${p.price.toLocaleString("id-ID")}
-                </div>
-                <button onclick="removeSavedProduct(${p.id})"
-                        style="margin-top:8px;width:100%;
-                               border:none;padding:8px;
-                               border-radius:8px;background:#fee2e2;
-                               color:#991b1b;cursor:pointer">
-                    Hapus
-                </button>
-            </div>
-        `;
-    });
-
-    html += `</div>`;
-    document.getElementById("contentArea").innerHTML = html;
-}
-
-/* =====================================================
-   SEARCH
-   ===================================================== */
-function handleHeaderSearch(e) {
-    if (e.key === "Enter") executeSearch();
-}
-
-function executeSearch() {
-    const q = document.getElementById("globalSearch").value.toLowerCase();
-    const result = products.filter(p =>
-        p.title.toLowerCase().includes(q) ||
-        (p.keywords && p.keywords.some(k => q.includes(k)))
-    );
-
-    renderGrid(result, `Hasil pencarian: "${q}"`);
-}
-
-function renderGrid(list, title) {
-    if (list.length === 0) {
-        document.getElementById("contentArea").innerHTML =
-            `<p style="color:#777">Produk tidak ditemukan</p>`;
-        return;
-    }
-
-    let html = `<h2>${title}</h2><div class="grid-container">`;
     list.forEach(p => html += renderProductCard(p));
-    html += `</div>`;
-
+    html += `
+        </div>
+        <button onclick="exportWishlistToWA()">Share WhatsApp</button>
+        <button onclick="exportWishlistPDF()">Export PDF</button>
+    `;
     document.getElementById("contentArea").innerHTML = html;
 }
 
 /* =====================================================
-   CHATBOT (TETAP)
-   ===================================================== */
-function toggleChat() {
-    const c = document.getElementById("chatbot");
-    c.style.display = c.style.display === "flex" ? "none" : "flex";
+   EXPORT WISHLIST
+===================================================== */
+function exportWishlistToWA() {
+    const savedIds = JSON.parse(localStorage.getItem("savedProducts")) || [];
+    const list = products.filter(p => savedIds.includes(p.id));
+    let text = "📚 Wishlist Buku Saya:\n\n";
+    list.forEach((b,i)=>{
+        text += `${i+1}. ${b.title}\nRp ${b.price}\n\n`;
+    });
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
 }
 
+function exportWishlistPDF() {
+    const savedIds = JSON.parse(localStorage.getItem("savedProducts")) || [];
+    const list = products.filter(p => savedIds.includes(p.id));
+    let html = "<h1>Wishlist Buku</h1>";
+    list.forEach(b=>{
+        html += `<p><b>${b.title}</b><br>Rp ${b.price}</p>`;
+    });
+    const w = window.open("", "_blank");
+    w.document.write(html);
+    w.print();
+}
+
+/* =====================================================
+   EMBEDDING OFFLINE (SIMILARITY)
+===================================================== */
+function similarityScore(input, keywords) {
+    let score = 0;
+    keywords.forEach(k => {
+        if (input.includes(k)) score += 2;
+    });
+    return score;
+}
+
+/* =====================================================
+   CHATBOT QUICK REPLY
+===================================================== */
+function injectQuickReplies() {
+    const body = document.getElementById("chatBody");
+    if (!body) return;
+    body.innerHTML += `
+        <div class="bot-msg">
+            Pilih cepat:
+            <div>
+                <button onclick="quickChat('rekomendasi')">🎯 Rekomendasi</button>
+                <button onclick="quickChat('wishlist')">⭐ Wishlist</button>
+                <button onclick="quickChat('motivasi')">Motivasi</button>
+                <button onclick="quickChat('novel')">Novel</button>
+            </div>
+        </div>
+    `;
+}
+
+function quickChat(text) {
+    document.getElementById("chatInput").value = text;
+    handleUserChat();
+}
+
+/* =====================================================
+   CHATBOT INTENT ENGINE
+===================================================== */
 function handleUserChat() {
     const input = document.getElementById("chatInput");
-    const text = input.value.trim();
+    const text = input.value.toLowerCase();
     if (!text) return;
 
     const body = document.getElementById("chatBody");
-    body.innerHTML += `<div class="user-msg">${text}</div>`;
+    body.innerHTML += `<div class="user-msg">${input.value}</div>`;
     input.value = "";
 
-    body.innerHTML += `<div class="bot-msg">Aku bisa bantu rekomendasi buku 📚</div>`;
+    const savedIds = JSON.parse(localStorage.getItem("savedProducts")) || [];
+    const wishlist = products.filter(p => savedIds.includes(p.id));
+    const interest = JSON.parse(localStorage.getItem("userInterest")) || {};
+
+    let response = "";
+
+    if (text.includes("wishlist")) {
+        response = wishlist.length
+            ? wishlist.map(b=>"• "+b.title).join("<br>")
+            : "Wishlist kamu kosong";
+    }
+    else if (text.includes("rekomendasi")) {
+        const topKey = Object.keys(interest).sort((a,b)=>interest[b]-interest[a])[0];
+        const rec = products.filter(p =>
+            p.keywords?.includes(topKey) && !savedIds.includes(p.id)
+        ).slice(0,3);
+        response = rec.length
+            ? rec.map(b=>"• "+b.title).join("<br>")
+            : "Belum cukup data minatmu";
+    }
+    else {
+        const rec = products.filter(p =>
+            p.keywords?.some(k => text.includes(k))
+        ).slice(0,3);
+        response = rec.length
+            ? rec.map(b=>"• "+b.title).join("<br>")
+            : "Coba kata lain 😊";
+    }
+
+    body.innerHTML += `<div class="bot-msg">${response}</div>`;
     body.scrollTop = body.scrollHeight;
+}
+
+/* =====================================================
+   ADMIN DASHBOARD
+===================================================== */
+function showAdminDashboard() {
+    const interest = JSON.parse(localStorage.getItem("userInterest")) || {};
+    let html = "<h2>📊 Minat User</h2><ul>";
+    Object.entries(interest)
+        .sort((a,b)=>b[1]-a[1])
+        .forEach(([k,v])=>{
+            html += `<li>${k} : ${v} klik</li>`;
+        });
+    html += "</ul>";
+    document.getElementById("contentArea").innerHTML = html;
+}
+
+/* =====================================================
+   CHAT TOGGLE
+===================================================== */
+function toggleChat() {
+    const c = document.getElementById("chatbot");
+    c.style.display = c.style.display === "flex" ? "none" : "flex";
 }
