@@ -1,20 +1,23 @@
-/* ================= INIT ================= */
+/* =====================================================
+   INIT
+   ===================================================== */
 updateCartIcon();
 showMainCategories();
 
-/* ================= HOMEPAGE ================= */
+/* =====================================================
+   HOME (KATEGORI + SEMUA PRODUK)
+   ===================================================== */
 function showMainCategories() {
-    const today = new Date();
-    const dayName = today.toLocaleDateString("id-ID", { weekday: "long" });
 
     let html = `
         <h2 style="margin-bottom:20px;color:var(--primary)">
-            📚 Rekomendasi Buku
+            📚 Kategori Buku
         </h2>
 
         <div class="grid-container" style="margin-bottom:40px">
     `;
 
+    // === KATEGORI UTAMA ===
     for (let key in categories) {
         html += `
             <div class="cat-card" onclick="showCategory('${key}')">
@@ -26,69 +29,133 @@ function showMainCategories() {
 
     html += `</div>`;
 
-    // === PRODUK HIGHLIGHT (LOGIKA ASLI TETAP) ===
-    const highlight = products.filter(
-        p => p.status === 'bestseller' || p.status === 'flashsale'
-    );
+    // === SEMUA PRODUK DI HOME ===
+    html += `
+        <h2 style="margin-bottom:20px;color:var(--primary)">
+            📦 Semua Buku
+        </h2>
 
-    if (highlight.length > 0) {
-        html += `
-            <div class="grid-container">
-        `;
+        <div class="grid-container">
+    `;
 
-        highlight.forEach(b => {
-            html += renderProductCard(b);
-        });
+    products.forEach(p => {
+        html += renderProductCard(p);
+    });
 
-        html += `</div>`;
-    }
+    html += `</div>`;
 
     document.getElementById("breadcrumb").style.display = "none";
     document.getElementById("contentArea").innerHTML = html;
 }
 
-/* ================= CATEGORY ================= */
-function showCategory(cat) {
-    const filtered = products.filter(p => p.main === cat);
+/* =====================================================
+   KATEGORI → TAMPILKAN SUB-KATEGORI
+   ===================================================== */
+function showCategory(catKey) {
+
+    const cat = categories[catKey];
+
+    let html = `
+        <h2 style="margin-bottom:20px">
+            ${cat.label}
+        </h2>
+
+        <div class="grid-container">
+    `;
+
+    // === SUB-KATEGORI ===
+    for (let subKey in cat.subs) {
+        html += `
+            <div class="cat-card"
+                 onclick="showSubCategory('${catKey}','${subKey}')">
+                <h3>${cat.subs[subKey]}</h3>
+            </div>
+        `;
+    }
+
+    html += `</div>`;
 
     document.getElementById("breadcrumb").style.display = "block";
     document.getElementById("breadcrumb").innerHTML =
-        `<span onclick="showMainCategories()" style="cursor:pointer">Beranda</span> / ${categories[cat].label}`;
+        `<span style="cursor:pointer" onclick="showMainCategories()">Beranda</span> / ${cat.label}`;
 
-    renderGrid(filtered, categories[cat].label);
-}
-
-/* ================= GRID ================= */
-function renderGrid(list, title) {
-    if (list.length === 0) {
-        document.getElementById("contentArea").innerHTML =
-            `<p>Produk belum tersedia</p>`;
-        return;
-    }
-
-    let html = `<h2>${title}</h2><div class="grid-container">`;
-
-    list.forEach(b => {
-        html += renderProductCard(b);
-    });
-
-    html += `</div>`;
     document.getElementById("contentArea").innerHTML = html;
 }
 
-/* ================= PRODUCT CARD ================= */
-function renderProductCard(b) {
+/* =====================================================
+   SUB-KATEGORI → TAMPILKAN PRODUK
+   ===================================================== */
+function showSubCategory(mainKey, subKey) {
+
+    const filtered = products.filter(
+        p => p.main === mainKey && p.sub === subKey
+    );
+
+    document.getElementById("breadcrumb").innerHTML =
+        `<span style="cursor:pointer" onclick="showMainCategories()">Beranda</span> / 
+         <span style="cursor:pointer" onclick="showCategory('${mainKey}')">
+            ${categories[mainKey].label}
+         </span> / 
+         ${categories[mainKey].subs[subKey]}`;
+
+    renderGrid(filtered, categories[mainKey].subs[subKey]);
+}
+
+/* =====================================================
+   GRID PRODUK (TIDAK DIUBAH)
+   ===================================================== */
+function renderGrid(list, title) {
+
+    if (list.length === 0) {
+        document.getElementById("contentArea").innerHTML =
+            `<p style="color:#777">Produk belum tersedia</p>`;
+        return;
+    }
+
+    let html = `
+        <h2 style="margin-bottom:20px">${title}</h2>
+        <div class="grid-container">
+    `;
+
+    list.forEach(p => {
+        html += renderProductCard(p);
+    });
+
+    html += `</div>`;
+
+    document.getElementById("contentArea").innerHTML = html;
+}
+
+/* =====================================================
+   PRODUCT CARD (TETAP)
+   ===================================================== */
+function renderProductCard(p) {
     return `
         <div class="product-card">
-            <img src="${b.img}" alt="${b.title}">
-            <h3>${b.title}</h3>
-            <p>Rp ${b.price.toLocaleString("id-ID")}</p>
-            <a href="${b.links.shopee}" target="_blank">Beli di Shopee</a>
+            <img src="${p.img}" alt="${p.title}">
+            <div class="product-title">${p.title}</div>
+            <div class="product-price">
+                Rp ${p.price.toLocaleString("id-ID")}
+            </div>
+            <a href="${p.links.shopee}" target="_blank"
+               style="
+                   text-align:center;
+                   background:var(--shopee);
+                   color:#fff;
+                   padding:8px;
+                   border-radius:8px;
+                   text-decoration:none;
+                   font-size:.85rem;
+               ">
+               Beli di Shopee
+            </a>
         </div>
     `;
 }
 
-/* ================= SEARCH ================= */
+/* =====================================================
+   SEARCH (TETAP)
+   ===================================================== */
 function handleHeaderSearch(e) {
     if (e.key === "Enter") executeSearch();
 }
@@ -96,12 +163,16 @@ function handleHeaderSearch(e) {
 function executeSearch() {
     const q = document.getElementById("globalSearch").value.toLowerCase();
     const result = products.filter(p =>
-        p.title.toLowerCase().includes(q)
+        p.title.toLowerCase().includes(q) ||
+        (p.keywords && p.keywords.some(k => q.includes(k)))
     );
-    renderGrid(result, "Hasil Pencarian");
+
+    renderGrid(result, `Hasil pencarian: "${q}"`);
 }
 
-/* ================= CART ================= */
+/* =====================================================
+   CART (TETAP)
+   ===================================================== */
 let cart = [];
 
 function updateCartIcon() {
@@ -112,7 +183,9 @@ function toggleCart() {
     alert("Fitur simpan belum diaktifkan");
 }
 
-/* ================= CHATBOT ================= */
+/* =====================================================
+   CHATBOT (TETAP)
+   ===================================================== */
 function toggleChat() {
     const c = document.getElementById("chatbot");
     c.style.display = c.style.display === "flex" ? "none" : "flex";
@@ -130,8 +203,9 @@ function handleUserChat() {
     body.innerHTML += `
         <div class="bot-msg">
             Siap kak 👍<br>
-            Fitur rekomendasi akan segera aktif.
+            Aku bisa bantu cari buku berdasarkan genre 📚
         </div>
     `;
+
     body.scrollTop = body.scrollHeight;
 }
