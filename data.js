@@ -1,121 +1,207 @@
+/* =====================================================
+   KATEGORI
+   ===================================================== */
+const categories = {
+    fiksi: {
+        label: "Fiksi (Imajinatif)",
+        icon: "fa-book-open",
+        subs: {
+            romantis: "Roman / Romantis",
+            fantasi: "Fantasi",
+            sejarah: "Fiksi Sejarah"
+        }
+    },
+    nonfiksi: {
+        label: "Non-Fiksi (Fakta)",
+        icon: "fa-lightbulb",
+        subs: {
+            motivasi: "Pengembangan Diri",
+            psikologi: "Psikologi",
+            biografi: "Biografi"
+        }
+    },
+    referensi: {
+        label: "Referensi & Pendidikan",
+        icon: "fa-graduation-cap",
+        subs: {
+            panduan: "Buku Panduan",
+            pengembangan: "Pengembangan Diri"
+        }
+    }
+};
+
+/* =====================================================
+   DATA PRODUK (LENGKAP DENGAN LINK)
+   ===================================================== */
 const products = [
 
-/* =========================
-   NON-FIKSI – MOTIVASI
-   ========================= */
+/* ================= NON-FIKSI ================= */
+
 {
+    id: 1,
     title: "Tuhan, Beri Aku Alasan Untuk Tidak Menyerah",
-    author: "Syalmahat",
-    publisher: "Syalmahat Publishing",
     price: 73892,
+    main: "nonfiksi",
+    sub: "motivasi",
+    author: "Syalmahat Publishing",
     img: "https://down-tx-id.img.susercontent.com/sg-11134201-23020-g5bbllf7g5mvd9.webp",
-    links: { shopee: "https://s.shopee.co.id/13H8JZDbR" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["sedih","putus asa","healing","agama","motivasi","islam","self healing"],
-    status: "bestseller"
+    links: {
+        shopee: "https://s.shopee.co.id/13H8JZDbR"
+    },
+    keywords: ["motivasi","islami","healing","self love","menyerah"]
 },
 {
+    id: 2,
     title: "Nanti Juga Sembuh Sendiri",
-    author: "Helo Bagas",
-    publisher: "Gradien Mediatama",
     price: 79000,
+    main: "nonfiksi",
+    sub: "motivasi",
+    author: "Helo Bagas",
     img: "https://down-bs-id.img.susercontent.com/ffb4ca321a33d8a02d21e8351b453b28.webp",
-    links: { shopee: "https://s.shopee.co.id/AKTTRbJ8Fr" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["galau","healing","self love","move on","patah hati"]
+    links: {
+        shopee: "https://s.shopee.co.id/AKTTRbJ8Fr"
+    },
+    keywords: ["galau","healing","self love","sedih"]
 },
 {
+    id: 3,
     title: "Be Calm, Be Happy",
-    author: "Johan Anggara",
-    publisher: "Jendela Penerbit",
     price: 64000,
+    main: "nonfiksi",
+    sub: "psikologi",
+    author: "Johan Anggara",
     img: "https://down-bs-id.img.susercontent.com/id-11134207-8224w-mi144ymso5xd95.webp",
-    links: { shopee: "https://s.shopee.co.id/Lg7lxeNp5" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["tenang","bahagia","stress","emosi","mental"]
+    links: {
+        shopee: "https://s.shopee.co.id/Lg7lxeNp5"
+    },
+    keywords: ["tenang","bahagia","psikologi","stress"]
 },
 {
-    title: "The Principles Of Power",
-    author: "Dion Yulianto",
-    publisher: "Jendela Penerbit",
+    id: 4,
+    title: "The Principles of Power",
     price: 59999,
+    main: "nonfiksi",
+    sub: "psikologi",
+    author: "Dion Yulianto",
     img: "https://down-bs-id.img.susercontent.com/id-11134207-8224w-mg8xjr25v3ew1f.webp",
-    links: { shopee: "https://s.shopee.co.id/5AlNWuODWQ" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["karir","bisnis","manipulasi","negosiasi","psikologi"]
+    links: {
+        shopee: "https://s.shopee.co.id/5AlNWuODWQ"
+    },
+    keywords: ["psikologi","manipulasi","kekuatan","mental"]
 },
 {
-    title: "Berdamai Dengan Diri Sendiri (Lite)",
-    author: "Muthia Sayekti",
-    publisher: "Embrase",
+    id: 5,
+    title: "Berdamai Dengan Diri Sendiri",
     price: 25550,
+    main: "nonfiksi",
+    sub: "psikologi",
+    author: "Embrase",
     img: "https://down-bs-id.img.susercontent.com/id-11134207-7r98u-lxt511t2kvmm33.webp",
-    links: { shopee: "https://s.shopee.co.id/qcON1zJMm" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["self love","menerima diri","insecure","damai"]
+    links: {
+        shopee: "https://s.shopee.co.id/qcON1zJMm"
+    },
+    keywords: ["self healing","menerima diri","psikologi"]
 },
 {
-    title: "Berdamai Dengan Rasa Malas",
-    author: "Tim Embrase",
-    publisher: "Embrase",
-    price: 25500,
-    img: "https://down-bs-id.img.susercontent.com/id-11134207-7rbk8-m8wzai0p3s3faf.webp",
-    links: { shopee: "https://s.shopee.co.id/30gsxDY3wF" },
+    id: 6,
+    title: "Hidup Tanpa Rasa Insecure",
+    price: 42000,
     main: "nonfiksi",
-    sub: "panduan",
-    keywords: ["malas","produktif","disiplin","kaizen"]
+    sub: "psikologi",
+    author: "Embrase",
+    img: "https://down-bs-id.img.susercontent.com/id-11134207-7ra0g-mbsyk3ltihk4a7.webp",
+    links: {
+        shopee: "https://s.shopee.co.id/5q14KWPSUf"
+    },
+    keywords: ["insecure","percaya diri","mental"]
 },
 {
+    id: 7,
     title: "Umur 40 Kok Gini Amat?",
-    author: "Han Seonghee",
-    publisher: "Penerbit Haru",
     price: 9762,
+    main: "nonfiksi",
+    sub: "psikologi",
+    author: "Han Seonghee",
     img: "https://down-bs-id.img.susercontent.com/sg-11134201-7rd70-m7q09bgr5g1kba.webp",
-    links: { shopee: "https://s.shopee.co.id/2qNSkxGEKM" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["dewasa","umur 40","galau","midlife crisis"]
-},
-{
-    title: "Dark Psychology",
-    author: "Unknown",
-    publisher: "Indoliterasi",
-    price: 66000,
-    img: "https://down-bs-id.img.susercontent.com/id-11134207-7ra0i-mcwykfhrv8602d.webp",
-    links: { shopee: "https://s.shopee.co.id/6VGl7sbHvc" },
-    main: "nonfiksi",
-    sub: "motivasi",
-    keywords: ["psikologi","manipulasi","dark psychology","mental"]
+    links: {
+        shopee: "https://s.shopee.co.id/2qNSkxGEKM"
+    },
+    keywords: ["umur","kehidupan","refleksi"]
 },
 
-/* =========================
-   FIKSI – NOVEL
-   ========================= */
+/* ================= FIKSI ================= */
+
 {
-    title: "My Lecturer My Husband",
-    author: "Gitlicious",
-    publisher: "RDM Publishers",
-    price: 34999,
-    img: "https://down-bs-id.img.susercontent.com/0433370059fdcf5dbeee9a99b74a9c7e.webp",
-    links: { shopee: "https://s.shopee.co.id/5AlNWlFGw2" },
+    id: 8,
+    title: "Hujan",
+    price: 85500,
     main: "fiksi",
-    sub: "romansa",
-    keywords: ["romantis","cinta","kampus","novel cinta"]
+    sub: "romantis",
+    author: "Tere Liye",
+    img: "https://down-bs-id.img.susercontent.com/sg-11134201-22120-gdbg2iotbykv3d.webp",
+    links: {
+        shopee: "https://s.shopee.co.id/gIxvyqupV"
+    },
+    keywords: ["novel","romantis","cinta"]
 },
 {
-    title: "Hujan",
-    author: "Tere Liye",
-    publisher: "Gramedia",
-    price: 85500,
-    img: "https://down-bs-id.img.susercontent.com/sg-11134201-22120-gdbg2iotbykv3d.webp",
-    links: { shopee: "https://s.shopee.co.id/gIxvyqupV" },
+    id: 9,
+    title: "Dompet Ayah Sepatu Ibu",
+    price: 88000,
     main: "fiksi",
-    sub: "novel",
-    keywords: ["novel","persahabatan","cinta","fiksi"]
+    sub: "romantis",
+    author: "J.S Khairen",
+    img: "https://down-bs-id.img.susercontent.com/id-11134207-7r98s-lnqpgo7msd5212.webp",
+    links: {
+        shopee: "https://s.shopee.co.id/9KawV0Fb5N"
+    },
+    keywords: ["keluarga","haru","kehidupan"]
+},
+{
+    id: 10,
+    title: "Petualangan Don Quixote",
+    price: 36750,
+    main: "fiksi",
+    sub: "fantasi",
+    author: "Miguel De Cervantes",
+    img: "https://down-bs-id.img.susercontent.com/id-11134207-7r98t-lqvf0igir4hp0c.webp",
+    links: {
+        shopee: "https://s.shopee.co.id/3Vd9Iqaemg"
+    },
+    keywords: ["fantasi","petualangan","klasik"]
+},
+{
+    id: 11,
+    title: "Ketika Kemenangan Menjadi Kenangan",
+    price: 49000,
+    main: "fiksi",
+    sub: "romantis",
+    author: "Zetta Saja",
+    img: "https://down-bs-id.img.susercontent.com/id-11134207-8224s-mhx2lh3x026e31.webp",
+    links: {
+        shopee: "https://s.shopee.co.id/5fhe8OdWWn"
+    },
+    keywords: ["kehidupan","romantis","refleksi"]
+},
+
+/* ================= REFERENSI ================= */
+
+{
+    id: 12,
+    title: "The Alpha Girls Guide",
+    price: 79200,
+    main: "referensi",
+    sub: "pengembangan",
+    author: "Henry Manampiring",
+    img: "https://down-bs-id.img.susercontent.com/sg-11134201-22100-pns3coq93vivd6.webp",
+    links: {
+        shopee: "https://s.shopee.co.id/30gsx7AhsD"
+    },
+    keywords: ["pengembangan diri","panduan","perempuan"]
 }
+
 ];
+
+/* =====================================================
+   END DATA
+   ===================================================== */
